@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 Future<Album> fetchAlbum() async {
-  final response = await http.get(Uri.parse('http://127.0.0.1:8000/info.json'));
+  final response = await http.get(Uri.parse('/info.json'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     
 
-    Timer.periodic(Duration(seconds: 1), (Timer t) => setState(() {}));
+    Timer.periodic(const Duration(seconds: 1), (Timer t) => setState(() {}));
 
     return Scaffold(
       appBar: AppBar(
@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Spacer(),
+            const Spacer(),
             Center(
               child: FutureBuilder<Album>(
                 future: futureAlbum,
@@ -187,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           '$user has been on HRT for',
                         ),
                         Text(
-                          '$timertext',
+                          timertext,
                           style: Theme.of(context).textTheme.headlineMedium,
                           textAlign: TextAlign.center,
                         ),
@@ -207,13 +207,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
-            Spacer(),
+            const Spacer(),
             InkWell(
               child: const Text(
                   "Made with ❤️ by @9021007, written in Flutter"),
               onTap: () => launchUrl(
                   Uri.parse("https://links.9021007.xyz/"))),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
           ],
         ),
       ),
