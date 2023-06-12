@@ -172,6 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Spacer(),
             Center(
               child: FutureBuilder<Album>(
                 future: futureAlbum,
@@ -258,11 +259,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           'and has taken $totalunits $form for a total of $totalhrt mg.',
                         ),
                         // Spacer(),
-                        InkWell(
-                            child: const Text(
-                                "Made with ❤️ by @9021007, written in Flutter"),
-                            onTap: () => launchUrl(
-                                Uri.parse("https://links.9021007.xyz/"))),
+                        
                       ],
                     );
                   } else if (snapshot.hasError) {
@@ -274,6 +271,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
               ),
             ),
+            Spacer(),
+            InkWell(
+              child: const Text(
+                  "Made with ❤️ by @9021007, written in Flutter"),
+              onTap: () => launchUrl(
+                  Uri.parse("https://links.9021007.xyz/"))),
+            SizedBox(height: 10),
 
             // const Text(
             //   '$user has been on HRT for',
