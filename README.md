@@ -1,4 +1,4 @@
-# HRTracker-flutter
+# HRTracker
 This is a web dashboard to display your HRT progress. Fully Dockerized too, because why not?
 
 `docker run -d -p 80:80 --name hrtracker -e STARTMS= -e HRTUSER= -e DOSEMG= -e DOSEINT= -e HRTFORM= -e HRTUNITS= 9021007/hrtracker`
