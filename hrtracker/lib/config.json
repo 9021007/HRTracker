@@ -3,6 +3,6 @@
     "user": "Example User",
     "dosemg": 4,
     "doseinterval": 7,
-    "form": "injection",
+    "form": "injections",
     "unitsperdose": 1
 }
