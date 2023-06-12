@@ -20,13 +20,6 @@ Future<Album> fetchAlbum() async {
   }
 }
 
-// "startms": 1686349500000,
-//     "user": "Example User",
-//     "dosemg": 4,
-//     "doseinterval": 7,
-//     "form": "injection",
-//     "unitsperdose": 1
-
 class Album {
   final int startms;
   final String user;
@@ -96,64 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    const startms = 1686349500000;
-    const user = 'Example User';
-    const dosemg = 4; //amount per dose
-    const doseinterval = 7; //days between doses
-    const form = 'injection'; //injection, patch, pill, gel, spray, pellet
-    const unitsperdose =
-        1; //how many units per dose, eg 1 vial, 1 patch, 1 pill, 1 pump, 1 spray, 1 pellet
-
-    // var hrtstartdate = DateTime.fromMillisecondsSinceEpoch(startms);
-    // var difference = DateTime.now().difference(hrtstartdate);
-    // var differencehours = 0;
-    // var differencemins = 0;
-    // var differenceseconds = 0;
-    // var secondtext = 'seconds';
-
-    // var totaldoses = (difference.inDays / doseinterval).ceil(); //total times taken
-    // var totalhrt = totaldoses * dosemg * unitsperdose; //total mg taken
-    // var totalunits = totalhrt / dosemg; //total shots/pills/patches/etc taken
-
-    // double width = MediaQuery.of(context).size.width;
-    // double height = MediaQuery.of(context).size.height;
-    // var landscape = false;
-
-    // if (width > height) {
-    //   landscape = true;
-    // }
-
-    // if (difference.inHours < 24) {
-    //   differencehours = difference.inHours;
-    // } else {
-    //   differencehours = difference.inHours % 24;
-    // }
-
-    // if (difference.inMinutes < 60) {
-    //   differencemins = difference.inMinutes;
-    // } else {
-    //   differencemins = difference.inMinutes % 60;
-    // }
-
-    // if (difference.inSeconds < 60) {
-    //   differenceseconds = difference.inSeconds;
-    // } else {
-    //   differenceseconds = difference.inSeconds % 60;
-    // }
-
-    // if (differenceseconds == 1) {
-    //   secondtext = 'second';
-    // }
-
-    // var landscapetext =
-    //     '${difference.inDays} days, $differencehours hours, $differencemins minutes, and $differenceseconds $secondtext.';
-    // var portraittext =
-    //     '${difference.inDays} days,\n $differencehours hours,\n $differencemins minutes,\n and $differenceseconds $secondtext.';
-    // var timertext = portraittext;
-
-    // if (landscape) {
-    //   timertext = landscapetext;
-    // }
+    
 
     Timer.periodic(Duration(seconds: 1), (Timer t) => setState(() {}));
 
@@ -278,18 +214,6 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () => launchUrl(
                   Uri.parse("https://links.9021007.xyz/"))),
             SizedBox(height: 10),
-
-            // const Text(
-            //   '$user has been on HRT for',
-            // ),
-            // Text(
-            //   '$timertext',
-            //   style: Theme.of(context).textTheme.headline4,
-            //   textAlign: TextAlign.center,
-            // ),
-            // Text(
-            //   'and has taken $totalunits $form for a total of $totalhrt mg.',
-            // ),
           ],
         ),
       ),
