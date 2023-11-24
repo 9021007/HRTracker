@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 Future<Album> fetchAlbum() async {
-  final response = await http.get(Uri.parse('/info.json'));
+  final response = await http.get(Uri.parse('http://localhost:5032/info.json'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
@@ -23,28 +23,31 @@ Future<Album> fetchAlbum() async {
 class Album {
   final int startms;
   final String user;
-  final int dosemg;
-  final int doseinterval;
-  final String form;
-  final int unitsperdose;
+  final List<dynamic> hrt;
+  // final int dosemg;
+  // final int doseinterval;
+  // final String form;
+  // final int unitsperdose;
 
   const Album({
     required this.startms,
     required this.user,
-    required this.dosemg,
-    required this.doseinterval,
-    required this.form,
-    required this.unitsperdose,
+    required this.hrt,
+    // required this.dosemg,
+    // required this.doseinterval,
+    // required this.form,
+    // required this.unitsperdose,
   });
 
   factory Album.fromJson(Map<String, dynamic> json) {
     return Album(
       startms: json['startms'],
       user: json['user'],
-      dosemg: json['dosemg'],
-      doseinterval: json['doseinterval'],
-      form: json['form'],
-      unitsperdose: json['unitsperdose'],
+      hrt: json['hrt'],
+      // dosemg: json['dosemg'],
+      // doseinterval: json['doseinterval'],
+      // form: json['form'],
+      // unitsperdose: json['unitsperdose'],
     );
   }
 }
@@ -89,8 +92,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    
-
     Timer.periodic(const Duration(seconds: 1), (Timer t) => setState(() {}));
 
     return Scaffold(
@@ -114,15 +115,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 future: futureAlbum,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
+                    print("hi");
+                    print(snapshot.data!.hrt[1]["startms"]);
                     var startms = snapshot.data!.startms;
                     var user = snapshot.data!.user;
-                    var dosemg = snapshot.data!.dosemg; //amount per dose
-                    var doseinterval =
-                        snapshot.data!.doseinterval; //days between doses
-                    var form = snapshot.data!
-                        .form; //injection, patch, pill, gel, spray, pellet
-                    var unitsperdose = snapshot.data!
-                        .unitsperdose; //how many units per dose, eg 1 vial, 1 patch, 1 pill, 1 pump, 1 spray, 1 pellet
+                    var hrt = snapshot.data!
+                        .hrt; //array of dosemg, doseinterval, form, unitsperdose, add together for total
+                    // var dosemg = snapshot.data!.dosemg; //amount per dose
+                    // var doseinterval =
+                    //     snapshot.data!.doseinterval; //days between doses
+                    // var form = snapshot.data!
+                    //     .form; //injection, patch, pill, gel, spray, pellet
+                    // var unitsperdose = snapshot.data!
+                    //     .unitsperdose; //how many units per dose, eg 1 vial, 1 patch, 1 pill, 1 pump, 1 spray, 1 pellet
 
                     var hrtstartdate =
                         DateTime.fromMillisecondsSinceEpoch(startms);
@@ -132,12 +137,41 @@ class _MyHomePageState extends State<MyHomePage> {
                     var differenceseconds = 0;
                     var secondtext = 'seconds';
 
-                    var totaldoses = (difference.inDays / doseinterval)
-                        .ceil(); //total times taken
-                    var totalhrt =
-                        totaldoses * dosemg * unitsperdose; //total mg taken
-                    var totalunits =
-                        totalhrt / dosemg; //total shots/pills/patches/etc taken
+                    num totalhrt = 0;
+                    num totalunits = 0;
+
+                    print(difference.inDays);
+
+                    for (var i = 0; i < hrt.length; i++) {
+                      if (hrt[i]["endms"] == 0) {
+                        hrt[i]["endms"] = DateTime.now().millisecondsSinceEpoch;
+                      }
+                      var totaldoses =
+                          (DateTime.fromMillisecondsSinceEpoch(hrt[i]["endms"])
+                                  .difference(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          hrt[i]["startms"]))
+                                  .inDays /
+                              hrt[i]["doseinterval"]).round(); //total times taken
+                      print("totaldoses: $totaldoses");
+
+                      var thishrt = totaldoses *
+                          hrt[i]["dosemg"] *
+                          hrt[i]["unitsperdose"]; //total mg taken
+                      var thishrtunits = thishrt.toInt() /
+                          hrt[i]
+                              ["dosemg"]; //total shots/pills/patches/etc taken
+
+                      totalhrt = totalhrt.toInt() + thishrt.toInt();
+                      totalunits = totalunits + thishrtunits.toInt();
+                    }
+
+                    // var totaldoses = (difference.inDays / doseinterval)
+                    //     .ceil(); //total times taken
+                    // var totalhrt =
+                    //     totaldoses * dosemg * unitsperdose; //total mg taken
+                    // var totalunits =
+                    //     totalhrt / dosemg; //total shots/pills/patches/etc taken
 
                     double width = MediaQuery.of(context).size.width;
                     double height = MediaQuery.of(context).size.height;
@@ -192,10 +226,9 @@ class _MyHomePageState extends State<MyHomePage> {
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          'and has taken $totalunits $form for a total of $totalhrt mg.',
+                          'and has taken $totalunits FORM for a total of $totalhrt mg.',
                         ),
                         // Spacer(),
-                        
                       ],
                     );
                   } else if (snapshot.hasError) {
@@ -209,10 +242,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             const Spacer(),
             InkWell(
-              child: const Text(
-                  "Made with ❤️ by @9021007, written in Flutter"),
-              onTap: () => launchUrl(
-                  Uri.parse("https://links.9021007.xyz/"))),
+                child:
+                    const Text("Made with ❤️ by @9021007, written in Flutter"),
+                onTap: () =>
+                    launchUrl(Uri.parse("https://links.9021007.xyz/"))),
             const SizedBox(height: 10),
           ],
         ),
